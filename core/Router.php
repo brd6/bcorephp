@@ -14,13 +14,13 @@ class Router
      * List of routes
      * @var array of Route
      */
-    protected $routes = array();
+    private $routes = array();
 
     /**
-     * Current route params
-     * @var array
+     * Current route
+     * @var Route
      */
-    protected $params = array();
+    private $currentRoute = null;
 
     /**
      * add a route by method
@@ -51,7 +51,14 @@ class Router
         return $this->routes;
     }
 
-    public function match($requestUrl = "", $requestMethod = "")
+    public function run($requestUrl = "", $requestMethod = "")
+    {
+        $this->match($requestUrl, $requestMethod);
+        if ($this->currentRoute != null)
+            $this->currentRoute->call();
+    }
+
+    private function match($requestUrl = "", $requestMethod = "")
     {
         $requestMethod = empty($requestMethod) ? $_SERVER["REQUEST_METHOD"] : $requestMethod;
         $requestUrl = empty($requestUrl) ? $_SERVER["REQUEST_URI"] : $requestUrl;
@@ -69,17 +76,24 @@ class Router
 
     private function fetchRoutes($requestMethod, $requestUrl)
     {
-        var_dump($requestUrl);
         foreach ($this->routes as $route)
         {
             if ($route->getMethod() == $requestMethod)
             {
-                if (preg_match_all($route->getRegexPattern(), $requestUrl, $output_array)) {
-                    $this->setFetchRouteParam($route, $output_array);
-                    $route->call();
-                    return ($route);
-                }
+                if ($this->initRouteFetched($route, $requestUrl))
+                    return true;
             }
+        }
+        return false;
+    }
+
+    private function initRouteFetched(Route $route, $requestUrl)
+    {
+        if (preg_match_all($route->getRegexPattern(), $requestUrl, $output_array)) {
+            $this->setFetchRouteParam($route, $output_array);
+            $route->setUrl($requestUrl);
+            $this->currentRoute = $route;
+            return true;
         }
         return false;
     }
@@ -96,10 +110,32 @@ class Router
     }
 
     /**
-     * Generate a url by route name and params
+     * Get a route by his name
+     * @param $name
+     * @return bool|Route
+     */
+    private function getRouteByName($name)
+    {
+        foreach ($this->routes as $route)
+        {
+            if ($route->getName() == $name)
+                return $route;
+        }
+        return false;
+    }
+
+    /**
+     * Generate a url by route name and set his params
+     * @param $routeName
+     * @param array $param
+     * @return bool|Route
      */
     public function generate($routeName, $param = array())
     {
-        return "";
+        $route = $this->getRouteByName($routeName);
+        if (!$route)
+            return (false);
+        $route->generateUrl($param);
+        return ($this->initRouteFetched($route, $route->getUrl())) ? $route : false;
     }
 }

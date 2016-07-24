@@ -50,6 +50,12 @@ class Route
      */
     private $name;
 
+    /**
+     * Final route url
+     * @var
+     */
+    private $url;
+
     public function __construct($pattern, $method, $controller)
     {
         $this->pattern = strlen($pattern) > 1 ? trim($pattern, "/") : $pattern;
@@ -104,9 +110,6 @@ class Route
         return $this->paramFilters;
     }
 
-    /**
-     * @param array $paramFilters
-     */
     private function setParamFilters()
     {
         $matched = preg_match_all('#{(\w+)}#', $this->pattern, $output_array);
@@ -138,6 +141,11 @@ class Route
         return $this;
     }
 
+    public function bind($name)
+    {
+        $this->name = $name;
+    }
+
     public function getRegexPattern()
     {
         $matched = preg_replace_callback('#({\w+})#', function ($matches) {
@@ -153,5 +161,39 @@ class Route
     public function getMethod()
     {
         return $this->method;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    public function generateUrl($params = array())
+    {
+        $matched = preg_replace_callback('#({\w+})#', function ($matches) use ($params) {
+            $key = str_replace(array("{", "}"), "", $matches[0]);
+            return $params[$key];
+        }, $this->pattern);
+        $this->url = $matched;
+
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getUrl()
+    {
+        return $this->url;
+    }
+
+    /**
+     * @param mixed $url
+     */
+    public function setUrl($url)
+    {
+        $this->url = $url;
     }
 }

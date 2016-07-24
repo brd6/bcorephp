@@ -22,16 +22,23 @@ $router = new Router();
 $router->get("/", "HomeController::home");
 $router->get("/index", function () use ($router){
     echo 'fd';
-});
+})->bind("home");
 
-$router->get("/new/{id}", "NewController::new")
-    ->with("id", '\d+');
+$router->get("/new/{id}", function ($id) {
+    echo $id;
+})
+    ->with("id", '\d+')
+    ->bind("new");
 
 $router->get("/ok/{id}", function ($id) {
     echo $id;
 })
     ->with("id", '\d+');
 
-var_dump($router->getRoutes());
+$route = $router->generate("new", array(
+    "id" => "8"
+));
 
-var_dump($router->match());
+$route->call();
+
+//$router->run();
