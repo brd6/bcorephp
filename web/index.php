@@ -6,26 +6,20 @@
  * Time: 16:04
  */
 
-var_dump($_SERVER);
+use Bcore\Router;
 
-//echo "REDIRECT_URL: ".$_SERVER["REDIRECT_URL"]."<br>";
-//echo "REQUEST_METHOD: ".$_SERVER["REQUEST_METHOD"]."<br>";
-//echo "QUERY_STRING: ".$_SERVER["QUERY_STRING"]."<br>";
-//echo "REQUEST_URI: ".$_SERVER["REQUEST_URI"]."<br>";
-
-// ^(?P<controller>[a-z-]+)\/?(?P<action>[a-z-]+)?$
-
-require "../core/Router.php";
+require_once __DIR__.'/../vendor/autoload.php';
 
 $router = new Router();
 
-$router->get("/", "HomeController::home");
+$router->get("/", 'MyApp\Home\HomeController::home');
 $router->get("/index", function () use ($router){
     echo 'fd';
 })->bind("home");
 
-$router->get("/new/{id}", function ($id) {
-    echo $id;
+$router->get("/new/{id}/{title}", function ($id, $title) {
+    echo "id=".$id."\n";
+    echo "title=".$title."\n";
 })
     ->with("id", '\d+')
     ->bind("new");
@@ -35,10 +29,10 @@ $router->get("/ok/{id}", function ($id) {
 })
     ->with("id", '\d+');
 
-$route = $router->generate("new", array(
-    "id" => "8"
-));
+//$route = $router->generate("new", array(
+//    "id" => "8"
+//));
 
-$route->call();
+//$route->call();
 
-//$router->run();
+$router->run();

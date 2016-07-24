@@ -1,0 +1,18 @@
+{
+  "name": "bcore/bcore",
+  "description": "A simple PHP framework",
+  "minimum-stability": "dev",
+  "license": "proprietary",
+  "authors": [
+    {
+      "name": "Berdrigue Bongolo-Beto",
+      "email": "b.berdrigue@gmail.com"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "MyApp\\": "src",
+      "Bcore\\": "Core"
+    }
+  }
+}

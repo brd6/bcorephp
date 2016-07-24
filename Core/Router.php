@@ -6,7 +6,9 @@
  * Time: 16:57
  */
 
-require "Route.php";
+namespace Bcore;
+
+use Bcore\Route;
 
 class Router
 {
@@ -44,6 +46,11 @@ class Router
     public function get($pattern, $controller)
     {
         return $this->add($pattern, "GET", $controller);
+    }
+
+    public function post($pattern, $controller)
+    {
+        return $this->add($pattern, "POST", $controller);
     }
 
     public function getRoutes()
@@ -137,5 +144,13 @@ class Router
             return (false);
         $route->generateUrl($param);
         return ($this->initRouteFetched($route, $route->getUrl())) ? $route : false;
+    }
+
+    /**
+     * @return Route
+     */
+    public function getCurrentRoute()
+    {
+        return $this->currentRoute;
     }
 }

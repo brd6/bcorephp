@@ -6,6 +6,9 @@
  * Date: 24/07/2016
  * Time: 00:23
  */
+
+namespace Bcore;
+
 class Route
 {
     /**
@@ -139,6 +142,11 @@ class Route
     {
         $this->paramFilters[$param] = $regex;
         return $this;
+    }
+
+    public function assert($param, $regex)
+    {
+        $this->with($param, $regex);
     }
 
     public function bind($name)
