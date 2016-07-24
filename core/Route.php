@@ -44,12 +44,22 @@ class Route
      */
     private $action;
 
+    /**
+     * Route name
+     * @var
+     */
+    private $name;
+
     public function __construct($pattern, $method, $controller)
     {
         $this->pattern = strlen($pattern) > 1 ? trim($pattern, "/") : $pattern;
-        $tmp = explode("::", $controller);
-        $this->controller = $tmp[0];
-        $this->action = count($tmp) <= 1 || empty($tmp[1]) ? "index" : $tmp[1];
+        if (is_string($controller)) {
+            $tmp = explode("::", $controller);
+            $this->controller = $tmp[0];
+            $this->action = count($tmp) <= 1 || empty($tmp[1]) ? "index" : $tmp[1];
+        }
+        else
+            $this->controller = $controller;
         $this->method = $method;
         $this->setParamFilters();
     }
@@ -112,8 +122,14 @@ class Route
 
     public function call()
     {
-        $instance = new $this->controller;
-        call_user_func_array(array($instance, $this->action), $this->params);
+        if (is_string($this->controller)) {
+            $instance = new $this->controller;
+            call_user_func_array(array($instance, $this->action), $this->params);
+        }
+        else
+        {
+            call_user_func_array($this->controller, $this->params);
+        }
     }
 
     public function with($param, $regex)

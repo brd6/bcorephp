@@ -76,6 +76,7 @@ class Router
             {
                 if (preg_match_all($route->getRegexPattern(), $requestUrl, $output_array)) {
                     $this->setFetchRouteParam($route, $output_array);
+                    $route->call();
                     return ($route);
                 }
             }
@@ -92,5 +93,13 @@ class Router
         }
 
         $route->setParams($params);
+    }
+
+    /**
+     * Generate a url by route name and params
+     */
+    public function generate($routeName, $param = array())
+    {
+        return "";
     }
 }

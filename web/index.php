@@ -20,9 +20,16 @@ require "../core/Router.php";
 $router = new Router();
 
 $router->get("/", "HomeController::home");
-$router->get("/index", "HomeController::home");
+$router->get("/index", function () use ($router){
+    echo 'fd';
+});
 
 $router->get("/new/{id}", "NewController::new")
+    ->with("id", '\d+');
+
+$router->get("/ok/{id}", function ($id) {
+    echo $id;
+})
     ->with("id", '\d+');
 
 var_dump($router->getRoutes());
