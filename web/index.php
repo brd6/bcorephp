@@ -7,6 +7,7 @@
  */
 
 use Bcorephp\Router;
+use Bcorephp\View;
 
 require_once __DIR__.'/../vendor/autoload.php';
 
@@ -17,7 +18,7 @@ $router->get("/", 'MyApp\Home\HomeController::home');
 
 // Init a get route with a anonymous function
 $router->get("/index", function () use ($router){
-    echo 'Index';
+    View::render("Home/index.html");
 });
 
 // Bind a name to a route
