@@ -7,5 +7,5 @@ $baseDir = dirname($vendorDir);
 
 return array(
     'MyApp\\' => array($baseDir . '/src'),
-    'Bcore\\' => array($baseDir . '/Core'),
+    'Bcorephp\\' => array($baseDir . '/Core'),
 );

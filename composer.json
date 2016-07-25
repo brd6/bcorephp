@@ -1,5 +1,5 @@
 {
-  "name": "bcore/bcore",
+  "name": "brd6/bcorephp",
   "description": "A simple PHP framework",
   "minimum-stability": "dev",
   "license": "proprietary",
@@ -12,7 +12,7 @@
   "autoload": {
     "psr-4": {
       "MyApp\\": "src",
-      "Bcore\\": "Core"
+      "Bcorephp\\": "Core"
     }
   }
 }

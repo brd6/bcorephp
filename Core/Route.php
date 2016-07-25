@@ -7,7 +7,7 @@
  * Time: 00:23
  */
 
-namespace Bcore;
+namespace Bcorephp;
 
 class Route
 {
@@ -58,6 +58,19 @@ class Route
      * @var
      */
     private $url;
+
+
+    /**
+     * Liste of function to execute before calling the route's controller
+     * @var array
+     */
+    private $beforeActionFunctions = array();
+
+    /**
+     * Liste of function to execute after calling the route's controller
+     * @var array
+     */
+    private $afterActionFunctions = array();
 
     public function __construct($pattern, $method, $controller)
     {
@@ -126,32 +139,95 @@ class Route
         }
     }
 
+    private function executeActionList($list = array())
+    {
+        foreach ($list as $action)
+        {
+            call_user_func_array($action, array());
+        }
+    }
+
+    /**
+     * Execute the route controller
+     */
     public function call()
     {
+        // execute before action
+        $this->executeActionList($this->beforeActionFunctions);
+
         if (is_string($this->controller)) {
             $instance = new $this->controller;
             call_user_func_array(array($instance, $this->action), $this->params);
         }
         else
         {
+            //var_dump($this->params);
             call_user_func_array($this->controller, $this->params);
         }
+
+        // execute after action
+        $this->executeActionList($this->afterActionFunctions);
     }
 
+    /**
+     * Add a regex condition to the route's variable
+     * @param $param
+     * @param $regex
+     * @return $this
+     */
     public function with($param, $regex)
     {
         $this->paramFilters[$param] = $regex;
         return $this;
     }
 
+    /**
+     * Alias of with's function
+     * @see Router::with()
+     * @param $param
+     * @param $regex
+     * @return $this
+     */
     public function assert($param, $regex)
     {
-        $this->with($param, $regex);
+        return $this->with($param, $regex);
     }
 
+    /**
+     * Bind a name to the route
+     * TODO Conflit de nom à voir
+     * @param $name
+     * @return $this
+     */
     public function bind($name)
     {
         $this->name = $name;
+        return $this;
+    }
+
+    /**
+     * TODO Verifier que les fonctions sont bien callable (is_callable)
+     * A add before action to executed before calling the route's controller
+     * @param $callable
+     * @return $this
+     */
+    public function before($callable)
+    {
+        $this->beforeActionFunctions[] = $callable;
+        return $this;
+    }
+
+
+    /**
+     * TODO Verifier que les fonctions sont bien callable (is_callable)
+     * A add after action to executed before calling the route's controller
+     * @param $callable
+     * @return $this
+     */
+    public function after($callable)
+    {
+        $this->afterActionFunctions[] = $callable;
+        return $this;
     }
 
     public function getRegexPattern()
@@ -179,6 +255,11 @@ class Route
         return $this->name;
     }
 
+    /**
+     * TODO Verification des parametres
+     * TODO Verifier que tous les parametres de la route sont rensignés
+     * @param array $params
+     */
     public function generateUrl($params = array())
     {
         $matched = preg_replace_callback('#({\w+})#', function ($matches) use ($params) {

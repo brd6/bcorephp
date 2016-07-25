@@ -6,9 +6,9 @@
  * Time: 16:57
  */
 
-namespace Bcore;
+namespace Bcorephp;
 
-use Bcore\Route;
+use Bcorephp\Route;
 
 class Router
 {
@@ -24,30 +24,54 @@ class Router
      */
     private $currentRoute = null;
 
+    private $baseRouterDir;
+
+    public function __construct($baseRouterDir = "")
+    {
+        $this->baseRouterDir = $baseRouterDir;
+    }
+
     /**
-     * add a route by method
+     * Add a route by method
      * @param $pattern
      * @param $method
      * @param $controller
-     * @return Route
+     * @return \Bcorephp\Route | bool
      */
     private function add($pattern, $method, $controller)
     {
+        if (empty($pattern) || empty($method) || empty($controller))
+        {
+            echo "Add error: some parameters are empties.\n";
+            return (false);
+        }
+        $baseRouterDirLen = strlen($this->baseRouterDir);
+        $sep = "/";
+        if ($baseRouterDirLen < 1 || $this->baseRouterDir[$baseRouterDirLen - 1] == "/" || $pattern[0] == "/")
+        $sep = "";
+        $pattern = ($this->baseRouterDir != "") ? $this->baseRouterDir.$sep.$pattern : $pattern;
+
         $this->routes[] = new Route($pattern, $method, $controller);
         return $this->routes[count($this->routes) - 1];
     }
 
     /***
-     * add a get route
+     * Add a get route
      * @param $pattern
      * @param $controller
-     * @return Route
+     * @return \Bcorephp\Route
      */
     public function get($pattern, $controller)
     {
         return $this->add($pattern, "GET", $controller);
     }
 
+    /**
+     * Add a post route
+     * @param $pattern
+     * @param $controller
+     * @return \Bcorephp\Route
+     */
     public function post($pattern, $controller)
     {
         return $this->add($pattern, "POST", $controller);
@@ -121,7 +145,7 @@ class Router
      * @param $name
      * @return bool|Route
      */
-    private function getRouteByName($name)
+    public function getRouteByName($name)
     {
         foreach ($this->routes as $route)
         {
@@ -140,6 +164,7 @@ class Router
     public function generate($routeName, $param = array())
     {
         $route = $this->getRouteByName($routeName);
+        var_dump($route);
         if (!$route)
             return (false);
         $route->generateUrl($param);

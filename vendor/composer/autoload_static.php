@@ -13,7 +13,7 @@ class ComposerStaticInit83dade4f9774ca28fc6fa001064ef375
         ),
         'B' => 
         array (
-            'Bcore\\' => 6,
+            'Bcorephp\\' => 9,
         ),
     );
 
@@ -22,7 +22,7 @@ class ComposerStaticInit83dade4f9774ca28fc6fa001064ef375
         array (
             0 => __DIR__ . '/../..' . '/src',
         ),
-        'Bcore\\' => 
+        'Bcorephp\\' => 
         array (
             0 => __DIR__ . '/../..' . '/Core',
         ),
