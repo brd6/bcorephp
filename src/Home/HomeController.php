@@ -9,11 +9,13 @@
 namespace MyApp\Home;
 
 
+use Bcorephp\Application;
+
 class HomeController
 {
-    public function home()
+    public function home($a, Application $appd)
     {
-        echo "dfdsf";
-        return "home";
+        //var_dump($appd);
+        echo "home";
     }
 }

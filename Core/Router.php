@@ -26,9 +26,12 @@ class Router
 
     private $baseRouterDir;
 
-    public function __construct($baseRouterDir = "")
+    private $app;
+
+    public function __construct(Application $app)
     {
-        $this->baseRouterDir = $baseRouterDir;
+        $this->app = $app;
+        $this->baseRouterDir = $app["base_url"];
     }
 
     /**
@@ -51,7 +54,7 @@ class Router
         $sep = "";
         $pattern = ($this->baseRouterDir != "") ? $this->baseRouterDir.$sep.$pattern : $pattern;
 
-        $this->routes[] = new Route($pattern, $method, $controller);
+        $this->routes[] = new Route($pattern, $method, $controller, $this->app);
         return $this->routes[count($this->routes) - 1];
     }
 
@@ -77,6 +80,32 @@ class Router
         return $this->add($pattern, "POST", $controller);
     }
 
+    /**
+     * Add a put route
+     * @param $pattern
+     * @param $controller
+     * @return \Bcorephp\Route|bool
+     */
+    public function put($pattern, $controller)
+    {
+        return $this->add($pattern, "PUT", $controller);
+    }
+
+    /**
+     * Add a delete route
+     * @param $pattern
+     * @param $controller
+     * @return \Bcorephp\Route|bool
+     */
+    public function delete($pattern, $controller)
+    {
+        return $this->add($pattern, "DELETE", $controller);
+    }
+
+    /**
+     * Get the list of route
+     * @return array
+     */
     public function getRoutes()
     {
         return $this->routes;
@@ -92,7 +121,7 @@ class Router
     private function match($requestUrl = "", $requestMethod = "")
     {
         $requestMethod = empty($requestMethod) ? $_SERVER["REQUEST_METHOD"] : $requestMethod;
-        $requestUrl = empty($requestUrl) ? $_SERVER["REQUEST_URI"] : $requestUrl;
+        $requestUrl = empty($requestUrl) && strlen($_SERVER["REQUEST_URI"]) > 1 ? $_SERVER["REQUEST_URI"] : $requestUrl;
 
         if (($pos = strpos($requestUrl, '?')) !== false) {
             $requestUrl = substr($requestUrl, 0, $pos);

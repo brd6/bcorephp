@@ -13,8 +13,9 @@ class View
 {
     private static $viewDirectory = "../views/";
 
-    public static function render($view)
+    public static function render($view, $args = array())
     {
+        extract($args, EXTR_SKIP);
         $file = self::$viewDirectory.$view;
         if (is_readable($file))
         {

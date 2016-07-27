@@ -14,5 +14,8 @@
       "MyApp\\": "src",
       "Bcorephp\\": "Core"
     }
+  },
+  "require": {
+    "twig/twig": "~1.0"
   }
 }

@@ -59,6 +59,8 @@ class Route
      */
     private $url;
 
+    private $app;
+
 
     /**
      * Liste of function to execute before calling the route's controller
@@ -72,8 +74,10 @@ class Route
      */
     private $afterActionFunctions = array();
 
-    public function __construct($pattern, $method, $controller)
+    public function __construct($pattern, $method, $controller, Application $app)
     {
+        $this->app = $app;
+
         $this->pattern = strlen($pattern) > 1 ? trim($pattern, "/") : $pattern;
         if (is_string($controller)) {
             $tmp = explode("::", $controller);
@@ -139,11 +143,11 @@ class Route
         }
     }
 
-    private function executeActionList($list = array())
+    public static function executeActionList($list = array(), $param = array())
     {
         foreach ($list as $action)
         {
-            call_user_func_array($action, array());
+            call_user_func_array($action, $param);
         }
     }
 
@@ -153,7 +157,10 @@ class Route
     public function call()
     {
         // execute before action
-        $this->executeActionList($this->beforeActionFunctions);
+        $this->executeActionList($this->beforeActionFunctions, array("app" => $this->app));
+
+        $this->params["app"] = $this->app;
+        var_dump($this->params);
 
         if (is_string($this->controller)) {
             $instance = new $this->controller;
@@ -257,7 +264,7 @@ class Route
 
     /**
      * TODO Verification des parametres
-     * TODO Verifier que tous les parametres de la route sont rensignés
+     * TODO Verifier que tous les parametres de la route sont rensegnés
      * @param array $params
      */
     public function generateUrl($params = array())
