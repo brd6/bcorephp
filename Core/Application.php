@@ -9,6 +9,7 @@
 namespace Bcorephp;
 
 use Bcorephp\Router;
+use Bcorephp\Service\IService;
 
 
 class Application extends ArrayAccessContainer
@@ -24,17 +25,26 @@ class Application extends ArrayAccessContainer
         $this['charset'] = 'UTF-8';
         $this['base_url'] = "";
 
-        $this->addApplicationConfig($config);
+        $this->copyArray($config, $this);
 
         $this['router'] = new Router($this);
-
+        $this['twig'] = "";
     }
 
-    private function addApplicationConfig(array $config)
+    /** Add a new service to the app
+     * @param $config
+     * @param IService $service
+     */
+    public function addService(IService $service, $config = array())
+    {
+        $service->initialisation($this, $config);
+    }
+
+    public static function copyArray(array $config, $to)
     {
         foreach ($config as $key => $value)
         {
-            $this[$key] = $value;
+            $to[$key] = $value;
         }
     }
 

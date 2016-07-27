@@ -160,7 +160,6 @@ class Route
         $this->executeActionList($this->beforeActionFunctions, array("app" => $this->app));
 
         $this->params["app"] = $this->app;
-        var_dump($this->params);
 
         if (is_string($this->controller)) {
             $instance = new $this->controller;

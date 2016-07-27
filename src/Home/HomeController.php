@@ -13,9 +13,10 @@ use Bcorephp\Application;
 
 class HomeController
 {
-    public function home($a, Application $appd)
+    public function home($a, Application $app)
     {
         //var_dump($appd);
-        echo "home";
+        //echo "home";
+        echo $app['twig']->render('/Home/index.html.twig', array('a' => $a));
     }
 }

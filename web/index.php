@@ -6,9 +6,7 @@
  * Time: 16:04
  */
 
-use Bcorephp\Application;
-
-require_once __DIR__.'/../vendor/autoload.php';
+require_once __DIR__.'/../App/app.php';
 
 //$router = new Router("");
 //
@@ -17,7 +15,7 @@ require_once __DIR__.'/../vendor/autoload.php';
 //
 //// Init a get route with a anonymous function
 //$router->get("/index", function () use ($router){
-//    View::render("Home/index.html");
+//    View::render("Home/index.html.twig");
 //});
 //
 //// Bind a name to a route
@@ -67,9 +65,6 @@ require_once __DIR__.'/../vendor/autoload.php';
 //
 //$router->run();
 
-$app = new Application(array(
-    "base_url" => "/berdrigue"
-));
 
 $app->get("/{a}", 'MyApp\Home\HomeController::home')
     ->with("a", "berdrigue");
