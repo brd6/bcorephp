@@ -143,13 +143,6 @@ class Route
         }
     }
 
-    public static function executeActionList($list = array(), $param = array())
-    {
-        foreach ($list as $action)
-        {
-            call_user_func_array($action, $param);
-        }
-    }
 
     /**
      * Execute the route controller
@@ -157,7 +150,7 @@ class Route
     public function call()
     {
         // execute before action
-        $this->executeActionList($this->beforeActionFunctions, array("app" => $this->app));
+        Utils::executeActionList($this->beforeActionFunctions, array("app" => $this->app));
 
         $this->params["app"] = $this->app;
 
@@ -172,7 +165,7 @@ class Route
         }
 
         // execute after action
-        $this->executeActionList($this->afterActionFunctions);
+        Utils::executeActionList($this->afterActionFunctions);
     }
 
     /**
@@ -188,18 +181,6 @@ class Route
     }
 
     /**
-     * Alias of with's function
-     * @see Router::with()
-     * @param $param
-     * @param $regex
-     * @return $this
-     */
-    public function assert($param, $regex)
-    {
-        return $this->with($param, $regex);
-    }
-
-    /**
      * Bind a name to the route
      * TODO Conflit de nom à voir
      * @param $name
@@ -212,26 +193,28 @@ class Route
     }
 
     /**
-     * TODO Verifier que les fonctions sont bien callable (is_callable)
      * A add before action to executed before calling the route's controller
      * @param $callable
-     * @return $this
+     * @return Route
      */
     public function before($callable)
     {
+        if (!is_callable($callable))
+            return null;
         $this->beforeActionFunctions[] = $callable;
         return $this;
     }
 
 
     /**
-     * TODO Verifier que les fonctions sont bien callable (is_callable)
      * A add after action to executed before calling the route's controller
      * @param $callable
      * @return $this
      */
     public function after($callable)
     {
+        if (!is_callable($callable))
+            return null;
         $this->afterActionFunctions[] = $callable;
         return $this;
     }

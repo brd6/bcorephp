@@ -7,5 +7,7 @@ $baseDir = dirname($vendorDir);
 
 return array(
     'MyApp\\' => array($baseDir . '/src'),
+    'Doctrine\\Common\\Cache\\' => array($vendorDir . '/doctrine/cache/lib/Doctrine/Common/Cache'),
+    'Doctrine\\Common\\' => array($vendorDir . '/doctrine/common/lib/Doctrine/Common'),
     'Bcorephp\\' => array($baseDir . '/Core'),
 );

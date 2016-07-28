@@ -21,14 +21,13 @@ class Application extends ArrayAccessContainer
     {
         parent::__construct();
 
-        $this["debug"] = false;
-        $this['charset'] = 'UTF-8';
-        $this['base_url'] = "";
+        $this["debug"] = isset($this["debug"]) ? $this["debug"] : false;
+        $this['charset'] = isset($this['charset']) ? $this['charset'] : 'UTF-8';
+        $this['base_url'] = isset($this['base_url']) ? $this['base_url'] : "";
 
-        $this->copyArray($config, $this);
+        Utils::copyArray($config, $this);
 
         $this['router'] = new Router($this);
-        $this['twig'] = "";
     }
 
     /** Add a new service to the app
@@ -38,14 +37,6 @@ class Application extends ArrayAccessContainer
     public function addService(IService $service, $config = array())
     {
         $service->initialisation($this, $config);
-    }
-
-    public static function copyArray(array $config, $to)
-    {
-        foreach ($config as $key => $value)
-        {
-            $to[$key] = $value;
-        }
     }
 
     /**
@@ -114,7 +105,6 @@ class Application extends ArrayAccessContainer
         return $this;
     }
 
-
     /**
      * Abort the current request
      * @param $statusCode
@@ -123,46 +113,28 @@ class Application extends ArrayAccessContainer
      */
     public function abort($statusCode, $message = '', array $headers = array())
     {
-        // TODO
+        http_response_code($statusCode);
+        if (count($headers) > 0)
+        {
+            foreach ($headers as $key => $value)
+            {
+                header($key.' '.$value, false);
+            }
+        }
+        exit($message);
     }
 
     /** Redirect the user to another url
      * @param $url
      * @param int $status
+     * @param int $refresh
      */
-    public function redirect($url, $status = 302)
+    public function redirect($url, $status = 302, $refresh = 0)
     {
-        // TODO
-        /*
-         *         $this->setContent(
-            sprintf('<!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="UTF-8" />
-        <meta http-equiv="refresh" content="1;url=%1$s" />
-
-        <title>Redirecting to %1$s</title>
-    </head>
-    <body>
-        Redirecting to <a href="%1$s">%1$s</a>.
-    </body>
-</html>', htmlspecialchars($url, ENT_QUOTES, 'UTF-8')));
-
-        $this->headers->set('Location', $url);
-         */
-    }
-
-    /**
-     * Escape a text html
-     * @param $text
-     * @param int $flags
-     * @param null $charset
-     * @param bool $doubleEncode
-     * @return string
-     */
-    public function escape($text, $flags = ENT_COMPAT, $charset = null, $doubleEncode = true)
-    {
-        return htmlspecialchars($text, $flags, $charset ?: $this['charset'], $doubleEncode);
+        if ($refresh > 0)
+            header("refresh:$refresh;url=$url", true, $status);
+        else
+            header("Location: $url", true, $status);
     }
 
     /**
@@ -181,8 +153,8 @@ class Application extends ArrayAccessContainer
      */
     public function run()
     {
-        Route::executeActionList($this->beforeActionFunctions);
+        Utils::executeActionList($this->beforeActionFunctions);
         $this["router"]->run();
-        Route::executeActionList($this->afterActionFunctions);
+        Utils::executeActionList($this->afterActionFunctions);
     }
 }

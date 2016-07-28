@@ -67,6 +67,6 @@ require_once __DIR__.'/../App/app.php';
 
 
 $app->get("/{a}", 'MyApp\Home\HomeController::home')
-    ->with("a", "berdrigue");
+    ->with("a", ".*");
 
 $app->run();
