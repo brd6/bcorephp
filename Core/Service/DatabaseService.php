@@ -18,7 +18,7 @@ class DatabaseService implements IService
     {
         if (count($app["db.options"]) < 1 && count($config) < 1)
             return (false);
-        $app["db"] = new Database(count($app["db.options"]) > 0 ? $app["db.options"] : $config);
+        $app["db"] = Database::getInstance(count($app["db.options"]) > 0 ? $app["db.options"] : $config);
         return true;
     }
 }

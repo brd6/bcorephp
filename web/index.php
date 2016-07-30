@@ -66,7 +66,5 @@ require_once __DIR__.'/../App/app.php';
 //$router->run();
 
 
-$app->get("/{a}", 'MyApp\Home\HomeController::home')
-    ->with("a", ".*");
-
+$app->get("/", 'MyApp\Home\HomeController::home');
 $app->run();

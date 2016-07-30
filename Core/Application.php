@@ -16,6 +16,7 @@ class Application extends ArrayAccessContainer
 {
     private $beforeActionFunctions = array();
     private $afterActionFunctions = array();
+    private $errorsCallable = array();
 
     public function __construct($config = array())
     {
@@ -25,9 +26,21 @@ class Application extends ArrayAccessContainer
         $this['charset'] = isset($this['charset']) ? $this['charset'] : 'UTF-8';
         $this['base_url'] = isset($this['base_url']) ? $this['base_url'] : "";
 
-        Utils::copyArray($config, $this);
+        Utils::copy_array($config, $this);
 
         $this['router'] = new Router($this);
+
+        if ($this["debug"]) {
+            error_reporting(E_ALL);
+            set_error_handler('Bcorephp\ErrorExceptionHandler::errorHandler');
+            set_exception_handler('Bcorephp\ErrorExceptionHandler::exceptionHandler');
+        }
+        else
+        {
+            error_reporting(0);
+            set_error_handler(null);
+            set_exception_handler(null);
+        }
     }
 
     /** Add a new service to the app
@@ -121,7 +134,26 @@ class Application extends ArrayAccessContainer
                 header($key.' '.$value, false);
             }
         }
-        exit($message);
+        if (!$this["debug"])
+        {
+            Utils::execute_action_list($this->errorsCallable, array(
+                "exception" => null,
+                "code" => $statusCode
+            ));
+        }
+        else
+            exit($message);
+    }
+
+    /**
+     * Add an error callable
+     * @param $callable
+     * @return $this
+     */
+    public function error($callable)
+    {
+        $this->errorsCallable[] = $callable;
+        return $this;
     }
 
     /** Redirect the user to another url
@@ -153,8 +185,11 @@ class Application extends ArrayAccessContainer
      */
     public function run()
     {
-        Utils::executeActionList($this->beforeActionFunctions);
+        if (!($this["router"] instanceof Router))
+            throw new \Exception("Router class doesn't exist in Application.");
+
+        Utils::execute_action_list($this->beforeActionFunctions, array("app" => $this));
         $this["router"]->run();
-        Utils::executeActionList($this->afterActionFunctions);
+        Utils::execute_action_list($this->afterActionFunctions, array("app" => $this));
     }
 }

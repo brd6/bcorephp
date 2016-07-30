@@ -13,12 +13,12 @@ use Bcorephp\Application;
 
 class HomeController
 {
-    public function home($a, Application $app)
+    public function home(Application $app)
     {
 //        $app->abort(404, "Erreur 404");
         //$app->redirect("http://google.fr");
         //var_dump($appd);
-        //echo "home";
-        echo $app['twig']->render('/Home/index.html.twig', array('a' => $a));
+        echo "home";
+        //echo $app['twig']->render('/Home/index.html.twig', array('a' => htmlspecialchars($a)));
     }
 }

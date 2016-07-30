@@ -8,16 +8,13 @@
 
 namespace Bcorephp;
 
-
-use Doctrine\Common\Util\Debug;
-
 class Database
 {
     /**
      * Unique instance of Database class
      * @var
      */
-    private static $instance;
+    private static $instance = null;
     /**
      * PDO Object
      * @var
@@ -31,22 +28,22 @@ class Database
      */
     private $config;
 
-    public function __construct(array $config = array())
+    private function __construct(array $config = array())
     {
         $this->config = $config;
         $this->connect();
     }
 
-    public static function getInstance()
+    public static function getInstance(array $config = array())
     {
-        if (!(self::$instance instanceof self))
+        if (!isset(self::$instance))
         {
-            self::$instance = new self();
+            self::$instance = new self($config);
         }
         return self::$instance;
     }
 
-    public function __clone()
+    private function __clone()
     {
 
     }
@@ -61,25 +58,14 @@ class Database
 
     private function connect()
     {
-        try
-        {
-            $this->config['port'] = isset($this->config['port']) ? $this->config['port'] : 3306;
-
-            var_dump($this->config);
-
-            $this->pdo = new \PDO("mysql:host=".$this->config['host'].";dbname=".$this->config['dbname'].";port=".$this->config['port'],
-                $this->config['user'],
-                $this->config['password'],
-                array(
-                    \PDO::ATTR_PERSISTENT => true
-                ));
-            $this->pdo->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
-        }
-        catch (\PDOException $e)
-        {
-            $this->pdo = null;
-            echo $e->getMessage();
-        }
+        $this->config['port'] = isset($this->config['port']) ? $this->config['port'] : 3306;
+        $this->pdo = new \PDO("mysql:host=".$this->config['host'].";dbname=".$this->config['dbname'].";port=".$this->config['port'],
+            $this->config['user'],
+            $this->config['password'],
+            array(
+                \PDO::ATTR_PERSISTENT => true
+            ));
+        $this->pdo->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
     }
 
     /**

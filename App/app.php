@@ -13,7 +13,8 @@ use Bcorephp\Service\DatabaseService;
 require_once __DIR__.'/../vendor/autoload.php';
 
 $app = new Application(array(
-    "base_url" => "/"
+    "base_url" => "/",
+    "debug" => true
 ));
 
 // db
@@ -27,6 +28,11 @@ $app['db.options'] = array(
     'password' => ''
 );
 
+// Error Page
+$app->error(function ($e, $code) {
+    echo "Erreur ".$code;
+});
+
 // Service initialisation
 
 // Twig
@@ -36,5 +42,3 @@ $app->addService(new TwigService(), array(
 
 // My Database Service
 $app->addService(new DatabaseService());
-
-// Doctrine DBAL

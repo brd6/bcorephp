@@ -22,7 +22,7 @@ class TwigService implements IService
      */
     public function initialisation(Application $app, Array $config = array())
     {
-        Utils::copyArray($config, $app);
+        Utils::copy_array($config, $app);
 
         $app['twig.options'] = !isset($app['twig.options']) ? array() : $app['twig.options'];
         $app['twig.path'] = !isset($app['twig.path']) ? array() : $app['twig.path'];

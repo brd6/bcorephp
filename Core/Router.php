@@ -24,6 +24,10 @@ class Router
      */
     private $currentRoute = null;
 
+    private $currentRequestUrl;
+
+    private $currentRequestMethod;
+
     private $baseRouterDir;
 
     private $app;
@@ -48,10 +52,13 @@ class Router
             echo "Add error: some parameters are empties.\n";
             return (false);
         }
+
         $baseRouterDirLen = strlen($this->baseRouterDir);
         $sep = "/";
         if ($baseRouterDirLen < 1 || $this->baseRouterDir[$baseRouterDirLen - 1] == "/" || $pattern[0] == "/")
-        $sep = "";
+            $sep = "";
+        if ($pattern[0] == "/")
+            $pattern = ltrim($pattern, "/");
         $pattern = ($this->baseRouterDir != "") ? $this->baseRouterDir.$sep.$pattern : $pattern;
 
         $this->routes[] = new Route($pattern, $method, $controller, $this->app);
@@ -111,50 +118,63 @@ class Router
         return $this->routes;
     }
 
-    public function run($requestUrl = "", $requestMethod = "")
+    public function run($currentRequestUrl = "", $currentRequestMethod = "")
     {
-        $this->match($requestUrl, $requestMethod);
+        $this->currentRequestUrl = $currentRequestUrl;
+        $this->currentRequestMethod = $currentRequestMethod;
+        $this->match();
         if ($this->currentRoute != null)
             $this->currentRoute->call();
+        else {
+            if (!$this->app["debug"])
+                $this->app->abort(404);
+            $exceptMessage = "The request : '".$this->currentRequestMethod." ".$this->currentRequestUrl."' doesn't match any route.";
+            throw new \Exception($exceptMessage);
+        }
     }
 
-    private function match($requestUrl = "", $requestMethod = "")
+    private function match()
     {
-        $requestMethod = empty($requestMethod) ? $_SERVER["REQUEST_METHOD"] : $requestMethod;
-        $requestUrl = empty($requestUrl) && strlen($_SERVER["REQUEST_URI"]) > 1 ? $_SERVER["REQUEST_URI"] : $requestUrl;
+        $this->currentRequestMethod = empty($this->currentRequestMethod) ?
+            $_SERVER["REQUEST_METHOD"] : $this->currentRequestMethod;
+        $this->currentRequestUrl = empty($this->currentRequestUrl) && strlen($_SERVER["REQUEST_URI"]) > 1 ?
+            $_SERVER["REQUEST_URI"] : $this->currentRequestUrl;
 
-        if (($pos = strpos($requestUrl, '?')) !== false) {
-            $requestUrl = substr($requestUrl, 0, $pos);
+        if (($pos = strpos($this->currentRequestUrl, '?')) !== false) {
+            $this->currentRequestUrl = substr($this->currentRequestUrl, 0, $pos);
         }
-        if (($pos = strpos($requestUrl, "/")) !== false && $pos == 0 && strlen($requestUrl) > 1)
-        {
-            $requestUrl = substr($requestUrl, 1);
-        }
+//        if (($pos = strpos($this->currentRequestUrl, "/")) !== false && $pos == 0 && strlen($this->currentRequestUrl) > 1)
+//        {
+//            $this->currentRequestUrl = substr($this->currentRequestUrl, 1);
+//        }
 
-        return $this->fetchRoutes($requestMethod, $requestUrl);
+        return $this->fetchRoutes($this->currentRequestMethod, $this->currentRequestUrl);
     }
 
-    private function fetchRoutes($requestMethod, $requestUrl)
+    private function fetchRoutes()
     {
         foreach ($this->routes as $route)
         {
-            if ($route->getMethod() == $requestMethod)
+            if ($route->getMethod() == $this->currentRequestMethod)
             {
-                if ($this->initRouteFetched($route, $requestUrl))
+                if ($this->initRouteFetched($route, $this->currentRequestUrl))
                     return true;
             }
         }
         return false;
     }
 
-    private function initRouteFetched(Route $route, $requestUrl)
+    private function initRouteFetched(Route $route)
     {
-        if (preg_match_all($route->getRegexPattern(), $requestUrl, $output_array)) {
+        if (preg_match_all($route->getRegexPattern(), $this->currentRequestUrl, $output_array)) {
             $this->setFetchRouteParam($route, $output_array);
-            $route->setUrl($requestUrl);
+            $route->setUrl($this->currentRequestUrl);
             $this->currentRoute = $route;
             return true;
         }
+//        var_dump($route->getRegexPattern());
+//        var_dump($this->currentRequestUrl);
+//        var_dump($output_array);
         return false;
     }
 

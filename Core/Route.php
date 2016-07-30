@@ -78,7 +78,7 @@ class Route
     {
         $this->app = $app;
 
-        $this->pattern = strlen($pattern) > 1 ? trim($pattern, "/") : $pattern;
+        $this->pattern = $pattern;
         if (is_string($controller)) {
             $tmp = explode("::", $controller);
             $this->controller = $tmp[0];
@@ -150,7 +150,7 @@ class Route
     public function call()
     {
         // execute before action
-        Utils::executeActionList($this->beforeActionFunctions, array("app" => $this->app));
+        Utils::execute_action_list($this->beforeActionFunctions, array("app" => $this->app));
 
         $this->params["app"] = $this->app;
 
@@ -165,7 +165,7 @@ class Route
         }
 
         // execute after action
-        Utils::executeActionList($this->afterActionFunctions);
+        Utils::execute_action_list($this->afterActionFunctions, array("app" => $this->app));
     }
 
     /**
@@ -225,6 +225,8 @@ class Route
             $key = str_replace(array("{", "}"), "", $matches[0]);
             return "(?P<$key>".$this->paramFilters[$key].")";
         }, $this->pattern);
+        if (substr($matched, -1) == "/")
+            $matched = Utils::str_lreplace("/", "/?", $matched);
         return "#^".$matched."$#";
     }
 
