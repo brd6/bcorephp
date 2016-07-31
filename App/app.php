@@ -39,4 +39,4 @@ $app->addService(new TwigService(), array(
 ));
 
 // My Database Service
-$app->addService(new DatabaseService());
+//$app->addService(new DatabaseService());
