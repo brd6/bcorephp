@@ -44,13 +44,13 @@ class Router
      * @param $method
      * @param $controller
      * @return \Bcorephp\Route | bool
+     * @throws
      */
     private function add($pattern, $method, $controller)
     {
         if (empty($pattern) || empty($method) || empty($controller))
         {
-            echo "Add error: some parameters are empties.\n";
-            return (false);
+            throw new \Exception("Add error: some parameters are empties.\n");
         }
 
         $baseRouterDirLen = strlen($this->baseRouterDir);
@@ -143,11 +143,6 @@ class Router
         if (($pos = strpos($this->currentRequestUrl, '?')) !== false) {
             $this->currentRequestUrl = substr($this->currentRequestUrl, 0, $pos);
         }
-//        if (($pos = strpos($this->currentRequestUrl, "/")) !== false && $pos == 0 && strlen($this->currentRequestUrl) > 1)
-//        {
-//            $this->currentRequestUrl = substr($this->currentRequestUrl, 1);
-//        }
-
         return $this->fetchRoutes($this->currentRequestMethod, $this->currentRequestUrl);
     }
 
@@ -172,9 +167,6 @@ class Router
             $this->currentRoute = $route;
             return true;
         }
-//        var_dump($route->getRegexPattern());
-//        var_dump($this->currentRequestUrl);
-//        var_dump($output_array);
         return false;
     }
 

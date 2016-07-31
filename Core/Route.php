@@ -160,7 +160,6 @@ class Route
         }
         else
         {
-            //var_dump($this->params);
             call_user_func_array($this->controller, $this->params);
         }
 
@@ -182,7 +181,6 @@ class Route
 
     /**
      * Bind a name to the route
-     * TODO Conflit de nom à voir
      * @param $name
      * @return $this
      */
@@ -247,8 +245,6 @@ class Route
     }
 
     /**
-     * TODO Verification des parametres
-     * TODO Verifier que tous les parametres de la route sont rensegnés
      * @param array $params
      */
     public function generateUrl($params = array())
@@ -258,7 +254,6 @@ class Route
             return $params[$key];
         }, $this->pattern);
         $this->url = $matched;
-
     }
 
     /**

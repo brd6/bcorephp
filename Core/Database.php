@@ -23,7 +23,6 @@ class Database
 
     /**
      * Database configuration
-     * TODO : Permettre le chargement de la config par un fichier (.init), voir : http://php.net/manual/fr/class.pdo.php
      * @var
      */
     private $config;

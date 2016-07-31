@@ -67,4 +67,5 @@ require_once __DIR__.'/../App/app.php';
 
 
 $app->get("/", 'MyApp\Home\HomeController::home');
+
 $app->run();

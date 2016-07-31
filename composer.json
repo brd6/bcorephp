@@ -1,8 +1,5 @@
 {
-  "name": "brd6/bcorephp",
-  "description": "A simple PHP framework",
-  "minimum-stability": "stable",
-  "license": "proprietary",
+  "name": "brd6/Bcorephp",
   "authors": [
     {
       "name": "Berdrigue Bongolo-Beto",
