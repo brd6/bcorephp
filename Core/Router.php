@@ -205,7 +205,6 @@ class Router
     public function generate($routeName, $param = array())
     {
         $route = $this->getRouteByName($routeName);
-        var_dump($route);
         if (!$route)
             return (false);
         $route->generateUrl($param);

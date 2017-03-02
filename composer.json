@@ -1,5 +1,8 @@
 {
   "name": "brd6/Bcorephp",
+  "type": "library",
+  "description": "Simple PHP framework",
+  "homepage": "https://github.com/brd6/Bcorephp",
   "authors": [
     {
       "name": "Berdrigue Bongolo-Beto",
@@ -8,11 +11,11 @@
   ],
   "autoload": {
     "psr-4": {
-      "MyApp\\": "src",
       "Bcorephp\\": "Core"
     }
   },
   "require": {
+    "php": ">=5.3.0",
     "twig/twig": "~1.0"
   }
 }
