@@ -6,9 +6,9 @@
  * Time: 00:50
  */
 
-namespace Bcorephp\Service;
+namespace bcorephp\Service;
 
-use Bcorephp\Application;
+use bcorephp\Application;
 
 interface IService
 {

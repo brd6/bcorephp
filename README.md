@@ -1,3 +1,3 @@
-# Bcorephp #
+# bcorephp #
 
 A simple PHP MVC framework

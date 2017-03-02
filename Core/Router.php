@@ -6,9 +6,9 @@
  * Time: 16:57
  */
 
-namespace Bcorephp;
+namespace bcorephp;
 
-use Bcorephp\Route;
+use bcorephp\Route;
 
 class Router
 {
@@ -43,7 +43,7 @@ class Router
      * @param $pattern
      * @param $method
      * @param $controller
-     * @return \Bcorephp\Route | bool
+     * @return \bcorephp\Route | bool
      * @throws
      */
     private function add($pattern, $method, $controller)
@@ -69,7 +69,7 @@ class Router
      * Add a get route
      * @param $pattern
      * @param $controller
-     * @return \Bcorephp\Route
+     * @return \bcorephp\Route
      */
     public function get($pattern, $controller)
     {
@@ -80,7 +80,7 @@ class Router
      * Add a post route
      * @param $pattern
      * @param $controller
-     * @return \Bcorephp\Route
+     * @return \bcorephp\Route
      */
     public function post($pattern, $controller)
     {
@@ -91,7 +91,7 @@ class Router
      * Add a put route
      * @param $pattern
      * @param $controller
-     * @return \Bcorephp\Route|bool
+     * @return \bcorephp\Route|bool
      */
     public function put($pattern, $controller)
     {
@@ -102,7 +102,7 @@ class Router
      * Add a delete route
      * @param $pattern
      * @param $controller
-     * @return \Bcorephp\Route|bool
+     * @return \bcorephp\Route|bool
      */
     public function delete($pattern, $controller)
     {

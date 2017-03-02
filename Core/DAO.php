@@ -6,7 +6,7 @@
  * Time: 01:07
  */
 
-namespace Bcorephp;
+namespace bcorephp;
 
 
 abstract class DAO

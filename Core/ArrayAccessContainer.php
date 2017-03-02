@@ -6,7 +6,7 @@
  * Time: 23:27
  */
 
-namespace Bcorephp;
+namespace bcorephp;
 
 
 class ArrayAccessContainer implements \ArrayAccess

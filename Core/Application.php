@@ -6,9 +6,9 @@
  * Time: 20:15
  */
 
-namespace Bcorephp;
+namespace bcorephp;
 
-use Bcorephp\Service\IService;
+use bcorephp\Service\IService;
 
 
 class Application extends ArrayAccessContainer
@@ -31,8 +31,8 @@ class Application extends ArrayAccessContainer
 
         if ($this["debug"]) {
             error_reporting(E_ALL);
-            set_error_handler('Bcorephp\ErrorExceptionHandler::errorHandler');
-            set_exception_handler('Bcorephp\ErrorExceptionHandler::exceptionHandler');
+            set_error_handler('bcorephp\ErrorExceptionHandler::errorHandler');
+            set_exception_handler('bcorephp\ErrorExceptionHandler::exceptionHandler');
         }
         else
         {

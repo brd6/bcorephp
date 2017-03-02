@@ -6,7 +6,7 @@
  * Time: 12:19
  */
 
-namespace Bcorephp;
+namespace bcorephp;
 
 
 class ErrorExceptionHandler

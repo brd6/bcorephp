@@ -7,7 +7,7 @@
  * Time: 00:23
  */
 
-namespace Bcorephp;
+namespace bcorephp;
 
 class Route
 {

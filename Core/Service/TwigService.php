@@ -6,11 +6,11 @@
  * Time: 00:51
  */
 
-namespace Bcorephp\Service;
+namespace bcorephp\Service;
 
 
-use Bcorephp\Application;
-use Bcorephp\Utils;
+use bcorephp\Application;
+use bcorephp\Utils;
 
 class TwigService implements IService
 {

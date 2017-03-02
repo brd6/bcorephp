@@ -6,11 +6,11 @@
  * Time: 00:31
  */
 
-namespace Bcorephp\Service;
+namespace bcorephp\Service;
 
 
-use Bcorephp\Application;
-use Bcorephp\Database;
+use bcorephp\Application;
+use bcorephp\Database;
 
 class DatabaseService implements IService
 {

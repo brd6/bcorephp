@@ -6,7 +6,7 @@
  * Time: 22:53
  */
 
-namespace Bcorephp;
+namespace bcorephp;
 
 class Database
 {

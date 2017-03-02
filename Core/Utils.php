@@ -6,7 +6,7 @@
  * Time: 20:35
  */
 
-namespace Bcorephp;
+namespace bcorephp;
 
 
 class Utils
