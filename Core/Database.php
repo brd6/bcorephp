@@ -58,7 +58,7 @@ class Database
     private function connect()
     {
         $this->config['port'] = isset($this->config['port']) ? $this->config['port'] : 3306;
-        $this->pdo = new \PDO("mysql:host=".$this->config['host'].";dbname=".$this->config['dbname'].";port=".$this->config['port'],
+        $this->pdo = new \PDO("mysql:host=".$this->config['host'].";dbname=".$this->config['dbname'].";port=".$this->config['port'].";charset=utf8",
             $this->config['user'],
             $this->config['password'],
             array(
