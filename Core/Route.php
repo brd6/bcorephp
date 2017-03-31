@@ -156,11 +156,11 @@ class Route
 
         if (is_string($this->controller)) {
             $instance = new $this->controller;
-            call_user_func_array(array($instance, $this->action), $this->params);
+            echo call_user_func_array(array($instance, $this->action), $this->params);
         }
         else
         {
-            call_user_func_array($this->controller, $this->params);
+            echo call_user_func_array($this->controller, $this->params);
         }
 
         // execute after action
